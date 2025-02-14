@@ -1,11 +1,11 @@
 package com.challenge.customermanagement.entity;
 
-import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
 import org.hibernate.proxy.HibernateProxy;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,20 +17,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
+@Entity(name = "users")
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
+@ToString
 @Builder
 @AllArgsConstructor
-public class Customer {
+public class User {
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
    private UUID id;
-   private String name;
-   private String lastName;
-   private LocalDate birthDate;
+
+   @Column(unique = true)
+   private String username;
+   private String password;
 
    @Override
    public final boolean equals(Object o) {
@@ -47,8 +48,8 @@ public class Customer {
       if (thisEffectiveClass != oEffectiveClass) {
          return false;
       }
-      Customer customer = (Customer) o;
-      return getId() != null && Objects.equals(getId(), customer.getId());
+      User user = (User) o;
+      return getId() != null && Objects.equals(getId(), user.getId());
    }
 
    @Override

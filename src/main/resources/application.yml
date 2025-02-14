@@ -12,7 +12,7 @@ spring:
       ddl-auto: update
   data:
     mongodb:
-      uri: mongodb://localhost:27017/authdb
+      uri: mongodb://localhost:27017/customerdb
   kafka:
     bootstrap-servers: localhost:9092
     producer:

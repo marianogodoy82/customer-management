@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CustomerMetricsService {
+
+   public static final String METRICS = "metrics";
+
    private final CustomerMetricsRepository customerMetricsRepository;
 
    public void updateStatistics(int age){
@@ -18,7 +21,7 @@ public class CustomerMetricsService {
       final double[] newSumOfSquares = new double[1];
       final double[] newStandardDeviation = new double[1];
 
-      customerMetricsRepository.findById("metrics")
+      customerMetricsRepository.findById(METRICS)
             .ifPresentOrElse(metrics -> {
                newTotalCustomer[0] = metrics.totalCustomer() + 1;
                newAverageAge[0] = (metrics.averageAge() * metrics.totalCustomer() + age) / newTotalCustomer[0];
@@ -32,11 +35,16 @@ public class CustomerMetricsService {
                   });
 
       customerMetricsRepository.save(CustomerMetrics.builder()
-                                     .id("metrics")
+                                     .id(METRICS)
                                      .totalCustomer(newTotalCustomer[0])
                                      .averageAge(newAverageAge[0])
                                      .sumOfSquares(newSumOfSquares[0])
                                      .standardDeviation(newStandardDeviation[0])
                                      .build());
+   }
+
+   public CustomerMetrics retrieveMetrics() {
+      return customerMetricsRepository.findById(METRICS)
+            .orElseThrow(() -> new RuntimeException("Metrics not found"));
    }
 }

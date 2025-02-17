@@ -50,6 +50,7 @@ docker-compose up -d --build
 ```
 Este comando iniciará:
 - **PostgreSQL** (`db`)
+- **MongoDB** (`mongo-db`)
 - **Kafka y Zookeeper** (`kafka` y `zookeeper`)
 - **La aplicación Spring Boot** (`app`)
 

@@ -1,9 +1,6 @@
 package com.challenge.customermanagement.entity;
 
-import java.util.Objects;
 import java.util.UUID;
-
-import org.hibernate.proxy.HibernateProxy;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,30 +29,4 @@ public class User {
    @Column(unique = true)
    private String username;
    private String password;
-
-   @Override
-   public final boolean equals(Object o) {
-      if (this == o) {
-         return true;
-      }
-      if (o == null) {
-         return false;
-      }
-      Class<?> oEffectiveClass = o instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-      Class<?> thisEffectiveClass = this instanceof HibernateProxy hibernateProxy
-            ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
-            : this.getClass();
-      if (thisEffectiveClass != oEffectiveClass) {
-         return false;
-      }
-      User user = (User) o;
-      return getId() != null && Objects.equals(getId(), user.getId());
-   }
-
-   @Override
-   public final int hashCode() {
-      return this instanceof HibernateProxy hibernateProxy
-            ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass().hashCode()
-            : getClass().hashCode();
-   }
 }

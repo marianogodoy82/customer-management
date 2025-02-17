@@ -40,7 +40,7 @@ cd gestor-clientes
 
 ### 🔹 **2. Construir la Imagen Docker de la Aplicación**
 ```bash
-docker build -t gestor-clientes .
+docker build -t customer-management-app .
 ```
 
 ### 🔹 **3. Iniciar la Aplicación con Docker Compose**

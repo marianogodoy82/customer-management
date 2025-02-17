@@ -34,8 +34,8 @@ Este proyecto implementa un **Gestor de Clientes** basado en una arquitectura **
 ## ⚙️ Configuración y Ejecución con Docker Compose
 ### 🔹 **1. Clonar el Repositorio**
 ```bash
-git clone https://github.com/tu-repo/gestor-clientes.git
-cd gestor-clientes
+git clone https://github.com/tu-repo/customer-management.git
+cd customer-management
 ```
 
 ### 🔹 **2. Construir la Imagen Docker de la Aplicación**

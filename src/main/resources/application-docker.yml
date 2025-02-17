@@ -1,0 +1,34 @@
+
+spring:
+  application.name: customer-management
+  datasource:
+    url: jdbc:postgresql://postgres:5432/customer_management
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  data:
+    mongodb:
+      uri: mongodb://mongo-db:27017/customerdb
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      retries: 3
+      properties:
+        linger.ms: 1
+    consumer:
+      group-id: management-customer-group
+      auto-offset-reset: earliest
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+
+jwt:
+  secret: L0zCapQbtILtj4aTZqaUP9mbKn7MykRfRern8u1jn8g=
+  expiration: 3600000  # 1 hora en milisegundos

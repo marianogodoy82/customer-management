@@ -25,30 +25,68 @@ Este proyecto implementa un **Gestor de Clientes** basado en una arquitectura **
 │   ├── CustomerManagementApplication.java # Clase principal
 │
 ├── docker-compose.yml       # Configuración de Docker para Kafka y MongoDB
+├── Dockerfile               # Configuración de imagen Docker para la aplicación
 ├── application.yml          # Configuración de Spring Boot
+├── application-docker.yml   # Configuración de Spring Boot para entorno Docker
 ├── README.md                # Documentación
 ```
 
-## ⚙️ Configuración y Ejecución
+## ⚙️ Configuración y Ejecución con Docker Compose
 ### 🔹 **1. Clonar el Repositorio**
 ```bash
-git clone https://github.com/marianogodoy82/customer-management.git
-cd customer-management
+git clone https://github.com/tu-repo/gestor-clientes.git
+cd gestor-clientes
 ```
 
-### 🔹 **2. Iniciar Dependencias con Docker**
-Ejecuta Kafka, Zookeeper y MongoDB con:
+### 🔹 **2. Construir la Imagen Docker de la Aplicación**
 ```bash
-docker-compose up -d
+docker build -t gestor-clientes .
 ```
 
-### 🔹 **3. Configurar la Base de Datos (PostgreSQL y MongoDB)**
-- **PostgreSQL:** Asegúrate de tener una base de datos `clientes_db` creada.
-- **MongoDB:** La colección `clienteMetricas` se creará automáticamente.
-
-### 🔹 **4. Ejecutar la Aplicación**
+### 🔹 **3. Iniciar la Aplicación con Docker Compose**
+Ejecuta el siguiente comando para levantar todos los servicios:
 ```bash
-mvn spring-boot:run
+docker-compose up -d --build
+```
+Este comando iniciará:
+- **PostgreSQL** (`db`)
+- **Kafka y Zookeeper** (`kafka` y `zookeeper`)
+- **La aplicación Spring Boot** (`app`)
+
+### 🔹 **4. Verificar los Contenedores en Ejecución**
+```bash
+docker ps
+```
+Deberías ver algo similar a:
+```
+CONTAINER ID   IMAGE                                STATUS          PORTS                    
+12345678       customer-management-app              Up 10 minutes  0.0.0.0:8080->8080/tcp    
+87654321       postgres:latest                      Up 10 minutes  0.0.0.0:5432->5432/tcp    
+65432109       confluentinc/cp-kafka:latest         Up 10 minutes  0.0.0.0:9092->9092/tcp    
+09876543       confluentinc/cp-zookeeper:latest     Up 10 minutes  0.0.0.0:2181->2181/tcp  
+3cae49b8       mongo:6.0                            Up 10 minutes  0.0.0.0:2181->2181/tcp    
+```
+
+### 🔹 **5. Ver Logs de la Aplicación**
+Para ver los logs de la aplicación Spring Boot:
+```bash
+docker logs customer-management-app -f
+```
+Para ver los logs de Kafka:
+```bash
+docker logs kafka -f
+```
+
+### 🔹 **6. Acceder a la API**
+Una vez que todos los contenedores están corriendo, accede a la API en:
+```
+http://localhost:8080/swagger-ui.html
+```
+
+### 🔹 **7. Detener la Aplicación**
+Para detener todos los contenedores:
+```bash
+docker-compose down
 ```
 
 ## 📌 Endpoints Disponibles

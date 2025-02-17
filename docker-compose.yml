@@ -1,4 +1,22 @@
+networks:
+  customer-manager-network:
+    driver: bridge
+
 services:
+  app:
+    build: .
+    container_name: customer-management
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - postgres
+      - mongo-db
+      - kafka
+    networks:
+      - customer-manager-network
+
   postgres:
     image: postgres:latest
     container_name: customer_management_db
@@ -11,6 +29,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+        - customer-manager-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -19,6 +39,8 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - "2181:2181"
+    networks:
+      - customer-manager-network
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -28,10 +50,12 @@ services:
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
       - "9092:9092"
+    networks:
+      - customer-manager-network
 
   mongo-db:
     image: mongo:6.0
@@ -41,6 +65,8 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - customer-manager-network
 
 volumes:
   postgres_data:

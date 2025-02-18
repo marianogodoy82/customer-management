@@ -1,5 +1,6 @@
 package com.challenge.customermanagement.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.challenge.customermanagement.dto.CustomerDto;
 import com.challenge.customermanagement.dto.MetricsResponse;
 import com.challenge.customermanagement.entity.Customer;
 import com.challenge.customermanagement.model.CustomerMetrics;
@@ -32,9 +34,18 @@ public class CustomerController {
    }
 
    @GetMapping
-   public List<Customer> retrieveCustomers() {
-      return customerService.retrieveCustomers();
+   public List<CustomerDto> retrieveCustomers() {
+      return customerService.retrieveCustomers()
+            .stream().map(customer -> CustomerDto.builder()
+                  .id(customer.getId())
+                  .name(customer.getName())
+                  .lastName(customer.getLastName())
+                  .birthDate(customer.getBirthDate())
+                  .lifeExpectancy(customerService.calculateLifeExpectancy(customer.getId()))
+                  .build())
+            .toList();
    }
+
    @GetMapping("/{id}")
    public Customer retrieveCustomerById(@PathVariable UUID id) {
       return customerService.retrieveCustomerById(id);
@@ -48,5 +59,10 @@ public class CustomerController {
              .averageAge(metrics.averageAge())
              .standardDeviation(metrics.standardDeviation())
              .build();
+   }
+
+   @GetMapping("/{id}/life-expectancy")
+   public LocalDate calculateLifeExpectancy(@PathVariable UUID id) {
+      return customerService.calculateLifeExpectancy(id);
    }
 }

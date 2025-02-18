@@ -23,7 +23,7 @@ public class CustomerService {
 
    public Customer createCustomer(Customer customer) {
       final Customer result = customerRepository.save(customer);
-      customerEventProducer.sendEvent(calculateAge(customer.getBirthDate()));
+      customerEventProducer.sendEvent(STR."\{calculateAge(customer.getBirthDate())}");
       return result;
 
    }
@@ -35,7 +35,15 @@ public class CustomerService {
       return customerRepository.findById(id).orElseThrow(CustomerNotFoundException::new);
    }
 
-   private String calculateAge(LocalDate birthDate) {
-      return String.valueOf(ChronoUnit.YEARS.between(birthDate, LocalDate.now()));
+   private long calculateAge(LocalDate birthDate) {
+      return ChronoUnit.YEARS.between(birthDate, LocalDate.now());
+   }
+
+   public LocalDate calculateLifeExpectancy(UUID id) {
+      int averageLifeExpectancy = 75;
+      return customerRepository
+            .findById(id)
+            .map(customer -> customer.getBirthDate().plusYears(averageLifeExpectancy - calculateAge(customer.getBirthDate())))
+            .orElseThrow(CustomerNotFoundException::new);
    }
 }
